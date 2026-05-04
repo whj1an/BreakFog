@@ -1,0 +1,25 @@
+# macOS
+**.DS_Store
+
+# IDEs
+**.idea
+**.iml
+**.out
+
+# Obsidian
+/.obsidian
+
+# VSCode
+.vscode
+
+__pycache__/
+*.pyc
+
+target/
+*.class
+
+bin/
+
+node_modules/
+package-lock.json
+.env
