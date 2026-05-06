@@ -21,7 +21,6 @@ const parser = new Parser({
  * scope:
  * - live: merged into the Live timeline only (not Yahoo Finance).
  * - finance: Yahoo Finance CA RSS; shown in Finance tab only.
- * - politics: CBC Politics RSS; shown in Politics tab only.
  */
 const SOURCES = [
   {
@@ -55,12 +54,6 @@ const SOURCES = [
     name: "Yahoo Finance Canada",
     feedUrl: "https://ca.finance.yahoo.com/news/rssindex",
     scope: "finance",
-  },
-  {
-    id: "cbc-politics",
-    name: "CBC Politics",
-    feedUrl: "https://rss.cbc.ca/lineup/politics.xml",
-    scope: "politics",
   },
 ];
 

@@ -3,6 +3,8 @@
 ## short introduce
 This web program can collect main news from some of news website, like CTV news, CBC news, Global News, etc.
 
+![alt text](attechments/image.png)
+
 ## How it apply
 Use by Node.js to form the page
 

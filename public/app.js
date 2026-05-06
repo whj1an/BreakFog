@@ -1,5 +1,5 @@
 /**
- * Client UI: Live timeline, scoped feeds (Yahoo Finance, CBC Politics), channel filters, FAB.
+ * Client UI: Live timeline, scoped feeds (Yahoo Finance), channel filters, FAB.
  */
 
 const board = document.getElementById("board");
@@ -11,7 +11,7 @@ const channelButtons = document.querySelectorAll(".channel-pill");
 
 const SCROLL_TOP_THRESHOLD_PX = 72;
 
-/** @type {'live'|'finance'|'military'|'politics'|'sports'|'other'} */
+/** @type {'live'|'finance'|'military'|'sports'|'other'} */
 let activeChannel = "live";
 
 /** @type {Array<object>} */
@@ -19,9 +19,6 @@ let liveItems = [];
 
 /** @type {Array<object>} */
 let financeFeedItems = [];
-
-/** @type {Array<object>} */
-let politicsFeedItems = [];
 
 let errorBannerHtml = "";
 
@@ -125,7 +122,6 @@ function mergeSections(sections) {
     for (const item of section.items || []) {
       let channel;
       if (scope === "finance") channel = "finance";
-      else if (scope === "politics") channel = "politics";
       else channel = inferChannel(item.title || "", item.content || "", section.name || "");
       flat.push({
         ...item,
@@ -141,14 +137,12 @@ function mergeSections(sections) {
 function partitionSections(sections) {
   const live = [];
   const finance = [];
-  const politics = [];
   for (const s of sections || []) {
     const sc = s.scope || "live";
     if (sc === "finance") finance.push(s);
-    else if (sc === "politics") politics.push(s);
     else live.push(s);
   }
-  return { live, finance, politics };
+  return { live, finance };
 }
 
 function financeTabItems() {
@@ -259,10 +253,6 @@ function renderBoard() {
     if (activeChannel === "finance") {
       const merged = financeTabItems();
       main = merged.length ? merged.map((item) => renderCard(item)).join("") : emptyMessage();
-    } else if (activeChannel === "politics") {
-      main = politicsFeedItems.length
-        ? politicsFeedItems.map((item) => renderCard(item)).join("")
-        : emptyMessage();
     } else {
       const filtered = filterLiveByChannel(activeChannel);
       main = filtered.length ? filtered.map((item) => renderCard(item)).join("") : emptyMessage();
@@ -302,17 +292,16 @@ async function loadNews() {
 
     refreshedAtEl.textContent = formatTime(data.refreshedAt);
 
-    const { live, finance, politics } = partitionSections(data.sections);
+    const { live, finance } = partitionSections(data.sections);
     liveItems = mergeSections(live);
     financeFeedItems = mergeSections(finance);
-    politicsFeedItems = mergeSections(politics);
 
     errorBannerHtml =
       data.errors?.length > 0
         ? `<div class="status error">Some sources failed:<br/>${data.errors.map((e) => `${escapeHtml(e.name)}: ${escapeHtml(e.message)}`).join("<br/>")}</div>`
         : "";
 
-    const anyStories = liveItems.length + financeFeedItems.length + politicsFeedItems.length;
+    const anyStories = liveItems.length + financeFeedItems.length;
     if (!anyStories && !errorBannerHtml) {
       board.innerHTML = `<div class="status">No data available.</div>`;
     } else {
